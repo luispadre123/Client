@@ -10,17 +10,19 @@ body {
 header {
     background-color: #161B22; /* color2 */
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: fixed;
+    width: 97%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-nav h1 {
-    margin: 0;
+header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 nav ul {
@@ -42,33 +44,49 @@ nav ul li a:hover {
 
 /* Hero Section */
 #hero {
+    height: 100vh;
+    background: url('hero-bg.jpg') no-repeat center center/cover;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 80vh;
+    align-items: center;
     text-align: center;
-    background-color: #2c333b; /* color4 */
+    color: white;
 }
 
-#hero h2 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+#hero .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+#hero .content {
+    z-index: 2;
+}
+
+#hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
 }
 
 #hero p {
-    font-size: 1.2em;
-    margin-bottom: 20px;
+    font-size: 1.5em;
+    margin-bottom: 30px;
 }
 
 #hero button {
     background-color: #3a424e; /* color3 */
     border: none;
-    padding: 10px 20px;
+    padding: 15px 30px;
     border-radius: 5px;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 1.2em;
 }
 
 #hero button:hover {
@@ -77,33 +95,90 @@ nav ul li a:hover {
 
 /* Features Section */
 #features {
-    padding: 50px 20px;
-    text-align: center;
-}
-
-.feature-box {
-    background-color: #3a424e; /* color3 */
-    padding: 20px;
-    margin: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* About Section */
-#about {
-    padding: 50px 20px;
+    padding: 80px 20px;
     text-align: center;
     background-color: #2c333b; /* color4 */
 }
 
-/* Login/Register Section */
-.container {
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.feature-item {
     background-color: #161B22; /* color2 */
     padding: 20px;
     border-radius: 10px;
-    max-width: 400px;
-    margin: 0 auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.feature-item img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.feature-item h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.feature-item p {
+    font-size: 1em;
+}
+
+/* About Section */
+#about {
+    padding: 80px 20px;
+    text-align: center;
+    background-color: #1f242c; /* color1 */
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 80px 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background-color: #2c333b; /* color4 */
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #161B22; /* color2 */
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.close {
+    color: #aaaaaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .tabs {
@@ -113,18 +188,22 @@ nav ul li a:hover {
 }
 
 .tab-button {
-    background-color: #3a424e; /* color3 */
+    background-color: #161B22; /* color2 */
     border: none;
-    padding: 10px;
+    padding: 10px 20px;
     color: white;
     cursor: pointer;
-    width: 48%;
-    border-radius: 5px;
+    flex: 1;
+    margin-right: 5px;
     transition: background-color 0.3s;
 }
 
-.tab-button.active, .tab-button:hover {
-    background-color: #2c333b; /* color4 */
+.tab-button:last-child {
+    margin-right: 0;
+}
+
+.tab-button.active {
+    background-color: #3a424e; /* color3 */
 }
 
 .tab-content {
@@ -135,20 +214,27 @@ nav ul li a:hover {
     display: block;
 }
 
-input {
-    width: 100%;
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form h2 {
+    margin-bottom: 20px;
+}
+
+form input {
     padding: 10px;
-    margin: 10px 0;
+    margin-bottom: 15px;
+    border: 1px solid #161B22; /* color2 */
     border-radius: 5px;
-    border: none;
-    background-color: #3a424e; /* color3 */
+    background-color: #1f242c; /* color1 */
     color: white;
 }
 
-button {
-    width: 100%;
+form button {
     padding: 10px;
-    background-color: #2c333b; /* color4 */
+    background-color: #3a424e; /* color3 */
     border: none;
     border-radius: 5px;
     color: white;
@@ -156,14 +242,17 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #3a424e; /* color3 */
+form button:hover {
+    background-color: #161B22; /* color2 */
 }
 
-/* Footer */
+/* Footer Styles */
 footer {
     background-color: #161B22; /* color2 */
-    padding: 10px;
+    padding: 20px;
     text-align: center;
-    color: white;
+}
+
+footer p {
+    margin: 0;
 }
