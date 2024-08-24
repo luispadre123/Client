@@ -59,11 +59,10 @@ async function createMainWindow() {
     : { width: 400, height: 480 }; // Tamaño para no autenticados
 
   mainWindow = new BrowserWindow({
-    ...windowOptions,
+    // ...windowOptions,
     frame: true,
     // titleBarOverlay:true,
     // titleBarStyle: 'hidden',
-
     // autoHideMenuBar:true,
     // resizable:false,
     webPreferences: {
@@ -74,7 +73,7 @@ async function createMainWindow() {
       devTools: true
     },
   });
-  centerWindow(400, 480);
+  // centerWindow(400, 480);
   mainWindow.loadURL('http://localhost:5173');
 
   mainWindow.on('maximize', () => {
@@ -101,14 +100,14 @@ async function createMainWindow() {
     mainWindow.unmaximize();
   });
  
-  // ipcMain.on('resize-window', (event, { width, height }) => {
-  //   if (mainWindow) {
+  ipcMain.on('resize-window', (event, { width, height }) => {
+    if (mainWindow) {
       
-  //     mainWindow.setSize(width, height);
-  //   }
-  // });
+      mainWindow.setSize(width, height);
+    }
+  });
 
-  centerWindow(400, 480);
+  // centerWindow(400, 480);
 
   ipcMain.handle('resize-window', (event, width, height) => {
     centerWindow(width, height);
@@ -145,7 +144,7 @@ app.on('activate', () => {
 
 // Función para centrar la ventana en la pantalla
 function centerWindow(width: number, height: number) {
-  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+  const { width: screenWidth, helight: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
   const x = Math.round((screenWidth - width) / 2);
   const y = Math.round((screenHeight - height) / 2);
 

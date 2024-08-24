@@ -41,8 +41,12 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
     }, []);
 
     const updateData = async (data: AuthState['data']) => {
-        await window.api.saveToken(data.token);
-        setState({ data });
+        if (window.api && typeof window.api.saveToken === 'function') {
+            await window.api.saveToken(data.token);
+            setState({ data });
+        } else {
+            console.error('window.api is not defined or does not have saveToken method');
+        }
     };
 
     const logout = () => {
