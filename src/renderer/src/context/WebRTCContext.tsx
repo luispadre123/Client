@@ -66,6 +66,7 @@ export const WebRTCProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
 
 
+
     const addIceCandidate = async (candidate: RTCIceCandidateInit) => {
         if (peerConnection) {
             await peerConnection.addIceCandidate(candidate);

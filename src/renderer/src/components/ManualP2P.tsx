@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWebRTC } from '../context/WebRTCContext.tsx';
+import { useWebRTC } from '../context/WebRTCContext';
 
 const ManualP2P: React.FC = () => {
     const { createOffer, createAnswer, setRemoteDescription, addIceCandidate, peerConnection } = useWebRTC();
@@ -19,13 +19,24 @@ const ManualP2P: React.FC = () => {
     };
 
     const handleReceiveOffer = async () => {
-        await setRemoteDescription(JSON.parse(remoteOffer));
-        await createAnswer();
-        const localDescription = peerConnection?.localDescription;
-        if (localDescription) {
-            setAnswer(JSON.stringify(localDescription));
+        const parsedOffer = JSON.parse(remoteOffer);
+
+        if (peerConnection?.signalingState === "stable") {
+            await setRemoteDescription(parsedOffer);
+            if (peerConnection.signalingState === "have-remote-offer") {
+                await createAnswer();
+                const localDescription = peerConnection?.localDescription;
+                if (localDescription) {
+                    setAnswer(JSON.stringify(localDescription));
+                }
+            } else {
+                console.warn("Cannot create answer, signaling state is not have-remote-offer.");
+            }
+        } else {
+            console.warn("Peer connection is not in a stable state to receive an offer.");
         }
     };
+
 
     const handleSetAnswer = async () => {
         const parsedAnswer = JSON.parse(remoteAnswer);
@@ -36,7 +47,6 @@ const ManualP2P: React.FC = () => {
             console.warn("Peer connection is not in a state to set the remote answer.");
         }
     };
-
 
     const handleAddIceCandidate = async () => {
         await addIceCandidate(JSON.parse(remoteIceCandidate));
