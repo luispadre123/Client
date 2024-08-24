@@ -1,7 +1,47 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 let mainWindow: BrowserWindow;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Ruta para almacenar el token en el directorio de datos del usuario
+const getStoragePath = () => {
+  const userDataPath = app.getPath('userData');
+  const storageDir = path.join(userDataPath, 'game_client');
+
+  if (!fs.existsSync(storageDir)) {
+    fs.mkdirSync(storageDir, { recursive: true });
+  }
+
+  return path.join(storageDir, 'token.json');
+};
+
+// Guardar el token
+ipcMain.handle('save-token', async (event, token) => {
+  const storagePath = getStoragePath();
+  try {
+    fs.writeFileSync(storagePath, JSON.stringify({ token }));
+  } catch (error) {
+    console.error('Error al guardar el token:', error);
+  }
+});
+
+// Leer el token
+ipcMain.handle('load-token', async () => {
+  const storagePath = getStoragePath();
+  try {
+    if (fs.existsSync(storagePath)) {
+      const data = fs.readFileSync(storagePath);
+      const { token } = JSON.parse(data);
+      return token;
+    }
+  } catch (error) {
+    console.error('Error al leer el token:', error);
+  }
+  return null;
+});
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({

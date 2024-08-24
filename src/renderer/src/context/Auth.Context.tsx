@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext, ReactNode } from 'react';
+import React, { useState, createContext, useContext, ReactNode, useEffect } from 'react';
 
 interface AuthState {
     data: {
@@ -28,18 +28,25 @@ interface AuthContextProviderProps {
 }
 
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
-    const [state, setState] = useState<AuthState>(() => {
-        const token = localStorage.getItem('jwtToken') || "undefined";
-        return { data: { token } };
-    });
+    const [state, setState] = useState<AuthState>(initialData);
 
-    const updateData = (data: AuthState['data']) => {
-        localStorage.setItem('jwtToken', data.token);
+    useEffect(() => {
+        const loadStoredToken = async () => {
+            const savedToken = await window.api.loadToken();
+            if (savedToken) {
+                setState({ data: { token: savedToken } });
+            }
+        };
+        loadStoredToken();
+    }, []);
+
+    const updateData = async (data: AuthState['data']) => {
+        await window.api.saveToken(data.token);
         setState({ data });
     };
 
     const logout = () => {
-        localStorage.removeItem('jwtToken');
+        window.api.saveToken(""); // Clear the token
         setState(initialData);
     };
 
