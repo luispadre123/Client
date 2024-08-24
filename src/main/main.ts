@@ -53,6 +53,7 @@ function createMainWindow() {
     width: 800,
     height: 550,
     frame: true,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
@@ -62,6 +63,10 @@ function createMainWindow() {
   });
 
   mainWindow.loadURL('http://localhost:5173');
+  // Mostrar la ventana cuando el contenido esté listo
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.show();
+  });
 
   mainWindow.on('maximize', () => {
     mainWindow.webContents.send('window-maximized');
