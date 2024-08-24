@@ -1,6 +1,7 @@
 import React from 'react';
 import CustomTitleBar from '../components/CustomTitleBar';
 import { gql, useSubscription } from "@apollo/client";
+import RoomNotifications from "../components/RoomNotifications.tsx";
 
 // Definición de la suscripción
 const ROOMS_SUBSCRIPTION = gql`
@@ -34,6 +35,7 @@ const App: React.FC = () => {
 
     return (
         <>
+            <RoomNotifications/>
             <CustomTitleBar />
             <div className="ui segment">
                 <h3>Rooms Updates</h3>
