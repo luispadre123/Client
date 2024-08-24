@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -41,6 +41,11 @@ ipcMain.handle('load-token', async () => {
     console.error('Error al leer el token:', error);
   }
   return null;
+});
+
+// Manejar las notificaciones
+ipcMain.on('send-notification', (event, { title, body }) => {
+  new Notification({ title, body }).show();
 });
 
 function createMainWindow() {

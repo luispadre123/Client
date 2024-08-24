@@ -13,7 +13,10 @@ contextBridge.exposeInMainWorld('api', {
 
   // Funciones de manejo de tokens
   saveToken: (token) => ipcRenderer.invoke('save-token', token),
-  loadToken: () => ipcRenderer.invoke('load-token')
+  loadToken: () => ipcRenderer.invoke('load-token'),
+
+  // Función para enviar notificaciones
+  sendNotification: (title, body) => ipcRenderer.send('send-notification', { title, body }),
 });
 
 window.addEventListener('DOMContentLoaded', () => {
