@@ -1,3 +1,4 @@
+// App.tsx o App.js
 import React from 'react';
 import { ApolloProvider } from '@apollo/client';
 import AuthContextProvider, { useAuth } from './Auth.Context';
@@ -24,7 +25,7 @@ export default function App() {
 
 const Content: React.FC = () => {
     const { data } = useAuth();
-    console.log(data,'data')
+    console.log(data, 'data');
 
     return (
         <>

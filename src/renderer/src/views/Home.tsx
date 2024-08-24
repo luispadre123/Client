@@ -1,31 +1,65 @@
 import React from 'react';
 import CustomTitleBar from '../components/CustomTitleBar';
+import { gql, useSubscription } from "@apollo/client";
 
+// Definición de la suscripción
+const ROOMS_SUBSCRIPTION = gql`
+    subscription MySubscription {
+        roomsListAndUpdates {
+            id
+            name
+            users {
+                role
+                user {
+                    correo
+                    id
+                    nombreCompleto
+                }
+            }
+            host {
+                role
+                user {
+                    correo
+                    id
+                    nombreCompleto
+                }
+            }
+        }
+    }
+`;
 const App: React.FC = () => {
+    const { data: roomsData, loading: roomsLoading, error: roomsError } = useSubscription(ROOMS_SUBSCRIPTION);
 
-    return (<>
-            <CustomTitleBar/>
-            <div style={{paddingTop: 35}}>
-                Hola Mundo
-                <div className="ui labeled button" tabIndex="0">
-                    <div className="ui red button">
-                        <i className="heart icon"></i> Like
-                    </div>
-                    <a className="ui basic red left pointing label">
-                        1,048
-                    </a>
-                </div>
-                <div className="ui labeled button" tabIndex="0">
-                    <div className="ui basic blue button">
-                        <i className="fork icon"></i> Forks
-                    </div>
-                    <a className="ui basic left pointing blue label">
-                        1,048
-                    </a>
-                </div>
+    console.log('roomsData:', roomsData); // Verifica qué datos estás recibiendo
+
+    return (
+        <>
+            <CustomTitleBar />
+            <div className="ui segment">
+                <h3>Rooms Updates</h3>
+                {roomsLoading && <p>Loading rooms...</p>}
+                {roomsError && <p>Error: {roomsError.message}</p>}
+                {roomsData && roomsData.roomsListAndUpdates && roomsData.roomsListAndUpdates.length > 0 ? (
+                    roomsData.roomsListAndUpdates.map((room: any) => (
+                        <div key={room.id}>
+                            <h4>{room.name}</h4>
+                            <p>Host: {room.host.user.nombreCompleto}</p>
+                            <ul>
+                                {room.users.map((user: any) => (
+                                    <li key={user.user.id}>
+                                        {user.user.nombreCompleto} - {user.role}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))
+                ) : (
+                    <p>No rooms available.</p>
+                )}
             </div>
         </>
     );
 };
+
 
 export default App;
