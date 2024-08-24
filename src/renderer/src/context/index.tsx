@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import Auth from '../components/Auth';
 import { ApolloProvider } from '@apollo/client';
 import AuthContextProvider, { useAuth } from './Auth.Context';
@@ -30,6 +30,14 @@ export default function App() {
 const Content: React.FC = () => {
     const { data } = useAuth();
     console.log(data, 'data');
+
+    useEffect(() => {
+        if (data.token && data.token !== "undefined") {
+            window.api.resizeWindow(800, 600); // Cambia el tamaño para usuarios autenticados
+        } else {
+            window.api.resizeWindow(400, 480); // Cambia el tamaño para no autenticados
+        }
+    }, [data.token]);
 
     return (
         <>

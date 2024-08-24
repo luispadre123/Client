@@ -81,7 +81,6 @@ const Login: React.FC = ({children}) => {
                                     type="password"
                                     name="password"
                                     value="123"
-                                    value="123"
                                     placeholder="Contraseña"
                                     required
                                 />

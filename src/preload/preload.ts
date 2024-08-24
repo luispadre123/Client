@@ -15,6 +15,9 @@ contextBridge.exposeInMainWorld('api', {
   saveToken: (token) => ipcRenderer.invoke('save-token', token),
   loadToken: () => ipcRenderer.invoke('load-token'),
 
+  //Tama;o de las ventanas
+  resizeWindow: (width, height) => ipcRenderer.invoke('resize-window', width, height),
+
   // Función para enviar notificaciones
   sendNotification: (title, body) => ipcRenderer.send('send-notification', { title, body }),
 });

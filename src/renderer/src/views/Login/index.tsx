@@ -7,14 +7,12 @@ import { Container, GlobalStyle, Overlay } from './styles';
 import { useMutation } from '@apollo/client';
 import { CREATE_USUARIO } from '../../services/user-service';
 
-const LoginJAPG = () => {
+const LoginJAPG = ({toggleForm,isRegister}:any) => {
   const [createUsuario, { data, loading, error }] = useMutation(CREATE_USUARIO);
 
-  const [isRegister, setIsRegister] = useState(true);
+  // const [isRegister, setIsRegister] = useState(true);
 
-  const toggleForm = () => {
-    setIsRegister((prevIsRegister) => !prevIsRegister);
-  };
+
   const [formData, setFormData] = useState({
     correo: '',
     id: '',
@@ -32,7 +30,6 @@ const LoginJAPG = () => {
   };
 
   const handleSubmit = async () => {
-    debugger
     if (isRegister) {
       try {
         const { data } = await createUsuario({

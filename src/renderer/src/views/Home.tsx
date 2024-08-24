@@ -2,7 +2,16 @@ import React from 'react';
 import CustomTitleBar from '../components/CustomTitleBar';
 import { gql, useSubscription } from "@apollo/client";
 import RoomNotifications from "../components/RoomNotifications.tsx";
+import { useAuth } from '../context/Auth.Context.tsx';
+const LogoutButton: React.FC = () => {
+    const { logout } = useAuth();
 
+    return (
+        <button onClick={logout} className="ui red button">
+            Cerrar Sesión
+        </button>
+    );
+};
 // Definición de la suscripción
 const ROOMS_SUBSCRIPTION = gql`
     subscription MySubscription {
@@ -35,6 +44,7 @@ const App: React.FC = () => {
 
     return (
         <>
+        <LogoutButton></LogoutButton>
             <RoomNotifications/>
             <CustomTitleBar />
             <div className="ui segment">

@@ -34,7 +34,7 @@ const Container = styled.div`
   max-width: 450px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-height: 92vh;
+height: 95vh;
   @media screen and (min-width: 768px) {
     padding: 40px;
   }
