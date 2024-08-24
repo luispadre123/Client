@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain, Notification } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import Datastore from 'nedb';
+
 
 let mainWindow: BrowserWindow;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +19,9 @@ const getStoragePath = () => {
 
   return path.join(storageDir, 'token.json');
 };
+
+// Inicializar NeDB
+const db = new Datastore({ filename: path.join(app.getPath('userData'), 'database.db'), autoload: true });
 
 // Guardar el token
 ipcMain.handle('save-token', async (event, token) => {
@@ -46,6 +51,78 @@ ipcMain.handle('load-token', async () => {
 // Manejar las notificaciones
 ipcMain.on('send-notification', (event, { title, body }) => {
   new Notification({ title, body }).show();
+});
+
+// Funciones de NeDB
+
+// Insertar un documento
+ipcMain.handle('insert-document', async (event, doc) => {
+  return new Promise((resolve, reject) => {
+    db.insert(doc, (err, newDoc) => {
+      if (err) {
+        console.error('Error al insertar documento:', err);
+        reject(err);
+      } else {
+        resolve(newDoc);
+      }
+    });
+  });
+});
+
+// Obtener un documento por ID
+ipcMain.handle('get-document', async (event, id) => {
+  return new Promise((resolve, reject) => {
+    db.findOne({ _id: id }, (err, doc) => {
+      if (err) {
+        console.error('Error al obtener documento:', err);
+        reject(err);
+      } else {
+        resolve(doc);
+      }
+    });
+  });
+});
+
+// Obtener todos los documentos
+ipcMain.handle('get-all-documents', async () => {
+  return new Promise((resolve, reject) => {
+    db.find({}, (err, docs) => {
+      if (err) {
+        console.error('Error al obtener todos los documentos:', err);
+        reject(err);
+      } else {
+        resolve(docs);
+      }
+    });
+  });
+});
+
+// Actualizar un documento por ID
+ipcMain.handle('update-document', async (event, id, updates) => {
+  return new Promise((resolve, reject) => {
+    db.update({ _id: id }, { $set: updates }, {}, (err, numReplaced) => {
+      if (err) {
+        console.error('Error al actualizar documento:', err);
+        reject(err);
+      } else {
+        resolve(numReplaced);
+      }
+    });
+  });
+});
+
+// Eliminar un documento por ID
+ipcMain.handle('delete-document', async (event, id) => {
+  return new Promise((resolve, reject) => {
+    db.remove({ _id: id }, {}, (err, numRemoved) => {
+      if (err) {
+        console.error('Error al eliminar documento:', err);
+        reject(err);
+      } else {
+        resolve(numRemoved);
+      }
+    });
+  });
 });
 
 function createMainWindow() {
