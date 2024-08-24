@@ -1,5 +1,10 @@
-// App.tsx o App.js
-import React from 'react';
+import AuthContext from './Auth.Context'
+
+// import Home from '../views/Home';
+// import Login from '../views/Login';
+// import Register from '../views/Register';
+// import CustomTitleBar from '../components/CustomTitleBar';
+import Auth from '../components/Auth';
 import { ApolloProvider } from '@apollo/client';
 import AuthContextProvider, { useAuth } from './Auth.Context';
 import createApolloClient from '../api/apolloClient';

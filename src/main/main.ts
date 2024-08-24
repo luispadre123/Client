@@ -45,9 +45,13 @@ ipcMain.handle('load-token', async () => {
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 550,
+    width: 400,
+    height: 480,
     frame: true,
+    // titleBarOverlay:true,
+    titleBarStyle: 'hidden',
+    autoHideMenuBar:true,
+    resizable:false,
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,

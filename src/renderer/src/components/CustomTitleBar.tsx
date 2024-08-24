@@ -50,11 +50,11 @@ const CustomTitleBar: React.FC = () => {
             backgroundColor: '#2C2C2C',
             padding: '5px 10px',
             color: '#FFF',
-            WebkitAppRegion: 'drag',
-            userSelect: 'none',
-            position: "absolute",
-            width: "100vw",
-            top:0
+            // WebkitAppRegion: 'drag',
+            // userSelect: 'none',
+            // position: "absolute",
+            // width: "100vw",
+            // top:0
         }}>
             <div style={{ WebkitAppRegion: 'no-drag' }}>
                 <h3 style={{ margin: 0, color: '#FFF', fontSize: '16px', fontWeight: 'normal' }}>Mi Aplicación</h3>
