@@ -2,6 +2,7 @@ import React from 'react';
 import CustomTitleBar from '../components/CustomTitleBar';
 import { gql, useSubscription } from "@apollo/client";
 import RoomNotifications from "../components/RoomNotifications.tsx";
+import {useAuth} from "../context/Auth.Context.tsx";
 
 // Definición de la suscripción
 const ROOMS_SUBSCRIPTION = gql`
@@ -28,6 +29,15 @@ const ROOMS_SUBSCRIPTION = gql`
         }
     }
 `;
+const LogoutButton: React.FC = () => {
+    const { logout } = useAuth();
+
+    return (
+        <button onClick={logout} className="ui red button">
+            Cerrar Sesión
+        </button>
+    );
+};
 const App: React.FC = () => {
     const { data: roomsData, loading: roomsLoading, error: roomsError } = useSubscription(ROOMS_SUBSCRIPTION);
 
@@ -39,6 +49,7 @@ const App: React.FC = () => {
             <CustomTitleBar />
             <div className="ui segment">
                 <h3>Rooms Updates</h3>
+                <LogoutButton/>
                 {roomsLoading && <p>Loading rooms...</p>}
                 {roomsError && <p>Error: {roomsError.message}</p>}
                 {roomsData && roomsData.roomsListAndUpdates && roomsData.roomsListAndUpdates.length > 0 ? (
