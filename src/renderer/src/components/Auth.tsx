@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import Login from '../views/Login';
 import Register from '../views/Register';
 import CustomTitleBar from './CustomTitleBar';
-import LoginJAPG from '../views/Login/index';
+import LoginJAPG from '../views/Login';
 
 
 const Auth: React.FC = () => {

@@ -54,14 +54,16 @@ function createMainWindow() {
     height: 480,
     frame: true,
     // titleBarOverlay:true,
-    titleBarStyle: 'hidden',
-    autoHideMenuBar:true,
-    resizable:false,
+    // titleBarStyle: 'hidden',
+
+    // autoHideMenuBar:true,
+    // resizable:false,
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
       enableRemoteModule: false,
       nodeIntegration: false,
+      devTools:true
     },
   });
 
