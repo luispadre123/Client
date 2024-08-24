@@ -4,7 +4,7 @@ interface LoginType{
     toggleForm?: ()=>void;
     formData?: LoginRegisterProps;
     updateField?: (field: string, value: string) => void;
-    onSubmit?: () => void;
+    onSubmit?: (e: React.FormEvent<HTMLFormElement>, formData: FormData) => void;
 }
 
 interface LoginRegisterProps{

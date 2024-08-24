@@ -62,10 +62,10 @@ async function createMainWindow() {
     ...windowOptions,
     frame: true,
     // titleBarOverlay:true,
-    titleBarStyle: 'hidden',
+    // titleBarStyle: 'hidden',
 
-    autoHideMenuBar:true,
-    resizable:false,
+    // autoHideMenuBar:true,
+    // resizable:false,
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
