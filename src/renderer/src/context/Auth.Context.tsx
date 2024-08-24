@@ -28,10 +28,20 @@ interface AuthContextProviderProps {
 }
 
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
-    const [state, setState] = useState<AuthState>(initialData);
+    const [state, setState] = useState<AuthState>(() => {
+        const token = localStorage.getItem('jwtToken') || "undefined";
+        return { data: { token } };
+    });
 
-    const updateData = (data: AuthState['data']) => setState({ data });
-    const logout = () => setState(initialData);
+    const updateData = (data: AuthState['data']) => {
+        localStorage.setItem('jwtToken', data.token);
+        setState({ data });
+    };
+
+    const logout = () => {
+        localStorage.removeItem('jwtToken');
+        setState(initialData);
+    };
 
     return (
         <AuthContext.Provider value={{ ...state, logout, updateData }}>
