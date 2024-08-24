@@ -1,9 +1,9 @@
 import AuthContext from './Auth.Context'
 
-import Home from '../views/Home';
-import Login from '../views/Login';
-import Register from '../views/Register';
-import CustomTitleBar from '../components/CustomTitleBar';
+// import Home from '../views/Home';
+// import Login from '../views/Login';
+// import Register from '../views/Register';
+// import CustomTitleBar from '../components/CustomTitleBar';
 import Auth from '../components/Auth';
 import { ApolloProvider } from '@apollo/client';
 import client from '../api/apolloClient';
