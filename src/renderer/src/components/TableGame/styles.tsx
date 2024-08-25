@@ -49,9 +49,15 @@ const GameListContainer = styled.div`
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+
 `;
 
 const GameListHeader = styled.div`
+  top: 0;
+  position: sticky;
+  z-index: 1; /* Asegura que el header esté sobre otros elementos */
+  
   display: flex;
   background-color: #21262D;
   color: #8B949E;
@@ -68,7 +74,6 @@ const GameListHeader = styled.div`
 `;
 
 const GameListRow = styled.div<{ isSelected: boolean }>`
-
   display: flex;
   background-color: #161B22;
   transition: transform 0.2s ease, background-color 0.3s ease;
