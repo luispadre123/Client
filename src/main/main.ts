@@ -144,7 +144,7 @@ app.on('activate', () => {
 
 // Función para centrar la ventana en la pantalla
 function centerWindow(width: number, height: number) {
-  const { width: screenWidth, helight: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
   const x = Math.round((screenWidth - width) / 2);
   const y = Math.round((screenHeight - height) / 2);
 
