@@ -44,7 +44,7 @@ const App: React.FC = () => {
 
     return (
         <>
-        <LogoutButton></LogoutButton>
+            <LogoutButton></LogoutButton>
             <RoomNotifications/>
             <CustomTitleBar />
             <div className="ui segment">
