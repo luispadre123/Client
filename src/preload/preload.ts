@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 // Exponer funciones a través de contextBridge para ser usadas en React
 contextBridge.exposeInMainWorld('api', {
+  // Funciones para manejar ventanas principales
   minimizeWindow: () => ipcRenderer.send('minimize-window'),
   closeWindow: () => ipcRenderer.send('close-window'),
   maximizeWindow: () => ipcRenderer.send('maximize-window'),
@@ -15,7 +16,7 @@ contextBridge.exposeInMainWorld('api', {
   saveToken: (token) => ipcRenderer.invoke('save-token', token),
   loadToken: () => ipcRenderer.invoke('load-token'),
 
-  //Tama;o de las ventanas
+  // Tamaño de las ventanas
   resizeWindow: (width, height) => ipcRenderer.invoke('resize-window', width, height),
 
   // Función para enviar notificaciones
@@ -27,15 +28,20 @@ contextBridge.exposeInMainWorld('api', {
   getAllDocuments: () => ipcRenderer.invoke('get-all-documents'),
   updateDocument: (id, updates) => ipcRenderer.invoke('update-document', id, updates),
   deleteDocument: (id) => ipcRenderer.invoke('delete-document', id),
+
+  // Funciones para abrir ventanas específicas
+  createRoom: () => ipcRenderer.invoke('create-room'),
+  joinRoom: () => ipcRenderer.invoke('join-room'),
+  openSettings: () => ipcRenderer.invoke('open-settings'),
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
+  const replaceText = (selector: string, text: string) => {
     const element = document.getElementById(selector);
     if (element) element.innerText = text;
   };
 
   for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type]);
+    replaceText(`${type}-version`, process.versions[type] || 'N/A');
   }
 });

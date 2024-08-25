@@ -1,14 +1,11 @@
-import React, { ReactNode, useEffect } from "react";
-import Auth from "../components/Auth";
+import React from "react";
 import { ApolloProvider } from "@apollo/client";
 import AuthContextProvider, { useAuth } from "./Auth.Context";
 import createApolloClient from "../api/apolloClient";
-import Home from "../views/Home";
-import Example from "../components/Example.tsx";
-import GameLobby from "../views/Loby/index.tsx";
+import AppRouter from "../router"; // Asegúrate de que el path es correcto
 
 interface ApolloWrapperProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const ApolloWrapper = ({ children }: ApolloWrapperProps) => {
@@ -17,34 +14,13 @@ const ApolloWrapper = ({ children }: ApolloWrapperProps) => {
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
+
 export default function App() {
   return (
-    <AuthContextProvider>
-      <ApolloWrapper>
-        <Content />
-
-      </ApolloWrapper>
-    </AuthContextProvider>
+      <AuthContextProvider>
+        <ApolloWrapper>
+          <AppRouter />
+        </ApolloWrapper>
+      </AuthContextProvider>
   );
 }
-
-const Content: React.FC = () => {
-  const { data } = useAuth();
-  console.log(data, "data");
-
-  useEffect(() => {
-    if (window.api.resizeWindow) {
-      if (data.token && data.token !== "undefined") {
-        window.api.resizeWindow(1100, 700);
-      } else {
-        window.api.resizeWindow(400, 480); // Cambia el tamaño para no autenticados
-      }
-    }
-  }, [data.token]);
-
-  return <>{data.token && data.token !== "undefined" ? <GameLobby /> : <Auth />}
-  
-  {/* <Example/> */}
-  
-  </>;
-};
