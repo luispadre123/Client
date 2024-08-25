@@ -54,7 +54,7 @@ const GameListContainer = styled.div`
 `;
 
 const GameListHeader = styled.div`
-  top: 0;
+  top: -1;
   position: sticky;
   z-index: 1; /* Asegura que el header esté sobre otros elementos */
   

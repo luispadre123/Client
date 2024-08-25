@@ -50,6 +50,8 @@ const GameListContainer = styled.div`
   border-radius: 10px;
   overflow: hidden;
   height: 70vh;
+  overflow-y: auto;
+
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 `;
 
