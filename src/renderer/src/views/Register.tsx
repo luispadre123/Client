@@ -1,24 +1,25 @@
 import React, { useRef } from 'react';
-import {  useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 
+
 const CREATE_USUARIO = gql`
-  mutation CreateUsuario($username: String!, $password: String!, $salt: Int!, $correo: String!, $nombreCompleto: String!, $numeroTelefono: String!) {
-    createUsuario(
-      username: $username
-      password: $password
-      salt: $salt
-      correo: $correo
-      nombreCompleto: $nombreCompleto
-      numeroTelefono: $numeroTelefono
-    ) {
-      id
-      username
-      correo
-      nombreCompleto
+    mutation CreateUsuario($username: String!, $password: String!, $salt: Int!, $correo: String!, $nombreCompleto: String!, $numeroTelefono: String!) {
+        createUsuario(
+            username: $username
+            password: $password
+            salt: $salt
+            correo: $correo
+            nombreCompleto: $nombreCompleto
+            numeroTelefono: $numeroTelefono
+        ) {
+            username
+            correo
+            nombreCompleto
+        }
     }
-  }
 `;
+
 const Register: React.FC = () => {
     const formRef = useRef<HTMLFormElement>(null);
 

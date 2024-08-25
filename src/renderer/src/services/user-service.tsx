@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
 const CREATE_USUARIO = gql`
   mutation CreateUsuario($username: String!, $password: String!, $salt: Int!, $correo: String!, $nombreCompleto: String!, $numeroTelefono: String!) {
     createUsuario(
@@ -9,7 +9,6 @@ const CREATE_USUARIO = gql`
       nombreCompleto: $nombreCompleto
       numeroTelefono: $numeroTelefono
     ) {
-      id
       username
       correo
       nombreCompleto
@@ -21,7 +20,6 @@ const CHECK_LOGIN = gql`
     checkLogin(correo: $correo, password: $password) {
       token
       usuario {
-        id
         username
         correo
         nombreCompleto
