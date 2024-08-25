@@ -4,6 +4,7 @@ import { ApolloProvider } from "@apollo/client";
 import AuthContextProvider, { useAuth } from "./Auth.Context";
 import createApolloClient from "../api/apolloClient";
 import Home from "../views/Home";
+import Example from "../components/Example.tsx";
 
 interface ApolloWrapperProps {
   children: ReactNode;
@@ -20,6 +21,7 @@ export default function App() {
     <AuthContextProvider>
       <ApolloWrapper>
         <Content />
+
       </ApolloWrapper>
     </AuthContextProvider>
   );
@@ -39,5 +41,5 @@ const Content: React.FC = () => {
     }
   }, [data.token]);
 
-  return <>{data.token && data.token !== "undefined" ? <Home /> : <Auth />}</>;
+  return <>{data.token && data.token !== "undefined" ? <Home /> : <Auth />}<Example/></>;
 };

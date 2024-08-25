@@ -20,6 +20,13 @@ contextBridge.exposeInMainWorld('api', {
 
   // Función para enviar notificaciones
   sendNotification: (title, body) => ipcRenderer.send('send-notification', { title, body }),
+
+  // Funciones de NeDB
+  insertDocument: (doc) => ipcRenderer.invoke('insert-document', doc),
+  getDocument: (id) => ipcRenderer.invoke('get-document', id),
+  getAllDocuments: () => ipcRenderer.invoke('get-all-documents'),
+  updateDocument: (id, updates) => ipcRenderer.invoke('update-document', id, updates),
+  deleteDocument: (id) => ipcRenderer.invoke('delete-document', id),
 });
 
 window.addEventListener('DOMContentLoaded', () => {
