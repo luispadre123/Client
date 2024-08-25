@@ -5,6 +5,7 @@ import AuthContextProvider, { useAuth } from "./Auth.Context";
 import createApolloClient from "../api/apolloClient";
 import Home from "../views/Home";
 import Example from "../components/Example.tsx";
+import GameLobby from "../views/Loby/index.tsx";
 
 interface ApolloWrapperProps {
   children: ReactNode;
@@ -41,5 +42,9 @@ const Content: React.FC = () => {
     }
   }, [data.token]);
 
-  return <>{data.token && data.token !== "undefined" ? <Home /> : <Auth />}<Example/></>;
+  return <>{data.token && data.token !== "undefined" ? <GameLobby /> : <Auth />}
+  
+  {/* <Example/> */}
+  
+  </>;
 };

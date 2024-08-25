@@ -9,7 +9,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { Form } from "./Body/styles";
 
-const LoginJAPG = memo(({ toggleForm, isRegister }) => {
+const LoginJAPG = memo(({ toggleForm, isRegister }:any) => {
   const { updateData } = useAuth();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -18,7 +18,7 @@ const LoginJAPG = memo(({ toggleForm, isRegister }) => {
 
   const isAddMode = useMemo(() => isRegister, [isRegister]);
 
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = useCallback(async (event:any) => {
     event.preventDefault();
     const form = formRef.current;
 
