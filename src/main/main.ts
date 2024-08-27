@@ -1,7 +1,7 @@
-import {app, BrowserWindow, ipcMain, Notification, screen} from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, screen } from 'electron';
 import path from 'path';
 import fs from 'fs';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 import Datastore from 'nedb';
 
 let mainWindow: BrowserWindow;
@@ -9,48 +9,42 @@ let createRoomWin: BrowserWindow | null = null;
 let joinRoomWin: BrowserWindow | null = null;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Ruta para almacenar el token en el directorio de datos del usuario
 const getStoragePath = () => {
     const userDataPath = app.getPath('userData');
     const storageDir = path.join(userDataPath, 'game_client');
 
     if (!fs.existsSync(storageDir)) {
-        fs.mkdirSync(storageDir, {recursive: true});
+        fs.mkdirSync(storageDir, { recursive: true });
     }
 
     return path.join(storageDir, 'token.json');
 };
 
-// Inicializar NeDB
-const db = new Datastore({filename: path.join(app.getPath('userData'), 'database.db'), autoload: true});
+const db = new Datastore({ filename: path.join(app.getPath('userData'), 'database.db'), autoload: true });
 
-// Manejador para abrir la ventana de "Crear Sala"
 ipcMain.handle('create-room', async () => {
     await createRoomWindow();
 });
 
-// Manejador para abrir la ventana de "Unirse a Sala"
 ipcMain.handle('join-room', async () => {
     await joinRoomWindow();
 });
 
-// Guardar el token
 ipcMain.handle('save-token', async (event, token) => {
     const storagePath = getStoragePath();
     try {
-        fs.writeFileSync(storagePath, JSON.stringify({token}));
+        fs.writeFileSync(storagePath, JSON.stringify({ token }));
     } catch (error) {
         console.error('Error al guardar el token:', error);
     }
 });
 
-// Leer el token
 async function loadToken() {
     const storagePath = getStoragePath();
     try {
         if (fs.existsSync(storagePath)) {
             const data = fs.readFileSync(storagePath);
-            const {token} = JSON.parse(data);
+            const { token } = JSON.parse(data);
             return token;
         }
     } catch (error) {
@@ -59,12 +53,10 @@ async function loadToken() {
     return null;
 }
 
-// Manejar las notificaciones
-ipcMain.on('send-notification', (event, {title, body}) => {
-    new Notification({title, body}).show();
+ipcMain.on('send-notification', (event, { title, body }) => {
+    new Notification({ title, body }).show();
 });
 
-// Funciones de NeDB
 ipcMain.handle('insert-document', async (event, doc) => {
     return new Promise((resolve, reject) => {
         db.insert(doc, (err, newDoc) => {
@@ -80,7 +72,7 @@ ipcMain.handle('insert-document', async (event, doc) => {
 
 ipcMain.handle('get-document', async (event, id) => {
     return new Promise((resolve, reject) => {
-        db.findOne({_id: id}, (err, doc) => {
+        db.findOne({ _id: id }, (err, doc) => {
             if (err) {
                 console.error('Error al obtener documento:', err);
                 reject(err);
@@ -106,7 +98,7 @@ ipcMain.handle('get-all-documents', async () => {
 
 ipcMain.handle('update-document', async (event, id, updates) => {
     return new Promise((resolve, reject) => {
-        db.update({_id: id}, {$set: updates}, {}, (err, numReplaced) => {
+        db.update({ _id: id }, { $set: updates }, {}, (err, numReplaced) => {
             if (err) {
                 console.error('Error al actualizar documento:', err);
                 reject(err);
@@ -119,7 +111,7 @@ ipcMain.handle('update-document', async (event, id, updates) => {
 
 ipcMain.handle('delete-document', async (event, id) => {
     return new Promise((resolve, reject) => {
-        db.remove({_id: id}, {}, (err, numRemoved) => {
+        db.remove({ _id: id }, {}, (err, numRemoved) => {
             if (err) {
                 console.error('Error al eliminar documento:', err);
                 reject(err);
@@ -130,10 +122,9 @@ ipcMain.handle('delete-document', async (event, id) => {
     });
 });
 
-// Función para abrir la ventana de "Crear Sala"
 async function createRoomWindow() {
     if (joinRoomWin) {
-        joinRoomWin.close(); // Cierra la ventana de "Unirse a Sala" si está abierta
+        joinRoomWin.close();
         joinRoomWin = null;
     }
 
@@ -154,7 +145,9 @@ async function createRoomWindow() {
         });
 
         createRoomWin.loadURL('http://localhost:5173/create-room');
-        createRoomWin.once('ready-to-show', () => createRoomWin?.show());
+        createRoomWin.webContents.on('did-finish-load', () => {
+            createRoomWin?.show();
+        });
 
         createRoomWin.on('closed', () => {
             createRoomWin = null;
@@ -162,10 +155,9 @@ async function createRoomWindow() {
     }
 }
 
-// Función para abrir la ventana de "Unirse a Sala"
 async function joinRoomWindow() {
     if (createRoomWin) {
-        createRoomWin.close(); // Cierra la ventana de "Crear Sala" si está abierta
+        createRoomWin.close();
         createRoomWin = null;
     }
 
@@ -186,7 +178,9 @@ async function joinRoomWindow() {
         });
 
         joinRoomWin.loadURL('http://localhost:5173/join-room');
-        joinRoomWin.once('ready-to-show', () => joinRoomWin?.show());
+        joinRoomWin.webContents.on('did-finish-load', () => {
+            joinRoomWin?.show();
+        });
 
         joinRoomWin.on('closed', () => {
             joinRoomWin = null;
@@ -194,7 +188,6 @@ async function joinRoomWindow() {
     }
 }
 
-// Función para abrir la ventana de "Configuración"
 async function settingsWindow() {
     const settingsWin = new BrowserWindow({
         width: 500,
@@ -212,33 +205,37 @@ async function settingsWindow() {
     });
 
     settingsWin.loadURL('http://localhost:5173/settings');
-    settingsWin.once('ready-to-show', () => settingsWin.show());
+    settingsWin.webContents.on('did-finish-load', () => {
+        settingsWin.show();
+    });
 }
 
-// Crear la ventana principal
 async function createMainWindow() {
-    // Cargar el token antes de crear la ventana
     const token = await loadToken();
     const isAuthenticated = token && token !== "undefined";
 
-    // Definir dimensiones dependiendo de la autenticación
     const windowOptions = isAuthenticated
-        ? {width: 1200, height: 900}  // Tamaño para usuarios autenticados
-        : {width: 400, height: 480}; // Tamaño para no autenticados
+        ? { width: 1200, height: 900 }
+        : { width: 400, height: 480 };
 
     mainWindow = new BrowserWindow({
-        // ...windowOptions,
+        ...windowOptions,
         frame: true,
+        backgroundColor: '#ffffff',
         webPreferences: {
             preload: path.join(__dirname, '../preload/preload.js'),
             contextIsolation: true,
             enableRemoteModule: false,
             nodeIntegration: false,
-            devTools: true
+            devTools: true,
         },
     });
 
     mainWindow.loadURL('http://localhost:5173');
+
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.show();
+    });
 
     mainWindow.on('maximize', () => {
         mainWindow.webContents.send('window-maximized');
@@ -264,29 +261,32 @@ async function createMainWindow() {
         mainWindow.unmaximize();
     });
 
-    ipcMain.on('resize-window', (event, {width, height}) => {
-        if (mainWindow) {
-            mainWindow.setSize(width, height);
-        }
-    });
-
-    ipcMain.handle('resize-window', (event, width, height) => {
-        centerWindow(width, height);
-    });
-
-    ipcMain.handle('load-token', async () => {
-        const storagePath = getStoragePath();
-        try {
-            if (fs.existsSync(storagePath)) {
-                const data = fs.readFileSync(storagePath);
-                const {token} = JSON.parse(data);
-                return token;
+    if (!ipcMain.eventNames().includes('resize-window')) {
+        ipcMain.handle('resize-window', (event, { width, height }) => {
+            if (mainWindow && typeof width === 'number' && typeof height === 'number') {
+                centerWindow(width, height);
+            } else {
+                console.error('Invalid width or height for window resize:', { width, height });
             }
-        } catch (error) {
-            console.error('Error al leer el token:', error);
-        }
-        return null;
-    });
+        });
+    }
+
+    if (!ipcMain.eventNames().includes('load-token')) {
+        ipcMain.handle('load-token', async () => {
+            const storagePath = getStoragePath();
+            try {
+                if (fs.existsSync(storagePath)) {
+                    const data = fs.readFileSync(storagePath);
+                    const { token } = JSON.parse(data);
+                    return token;
+                }
+            } catch (error) {
+                console.error('Error al leer el token:', error);
+                throw error;
+            }
+            return null;
+        });
+    }
 }
 
 app.whenReady().then(createMainWindow);
@@ -303,11 +303,15 @@ app.on('activate', () => {
     }
 });
 
-// Función para centrar la ventana en la pantalla
 function centerWindow(width: number, height: number) {
-    const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().workAreaSize;
+    if (typeof width !== 'number' || typeof height !== 'number') {
+        console.error('Invalid dimensions for window resize:', { width, height });
+        return;
+    }
+
+    const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
     const x = Math.round((screenWidth - width) / 2);
     const y = Math.round((screenHeight - height) / 2);
 
-    mainWindow.setBounds({x, y, width, height});
+    mainWindow.setBounds({ x, y, width, height });
 }
