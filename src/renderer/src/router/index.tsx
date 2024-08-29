@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "../components/Auth";
 import GameLobby from "../views/Loby";
 import {useAuth} from "../context/Auth.Context.tsx";
+import CreateGameRoomForm from "../views/CreateGameRoom/index.tsx";
+
 
 
 const AppRouter: React.FC = () => {
@@ -19,7 +21,7 @@ const AppRouter: React.FC = () => {
                         </>
                     }
                 />
-                <Route path="/create-room" element={<div>Create Room</div>} />
+                <Route path="/create-room" element={<CreateGameRoomForm/>} />
                 <Route path="/join-room" element={<div>Join Room</div>} />
                 <Route path="/settings" element={<div>Settings</div>} />
             </Routes>

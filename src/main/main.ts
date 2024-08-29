@@ -22,6 +22,9 @@ const getStoragePath = () => {
 
 const db = new Datastore({ filename: path.join(app.getPath('userData'), 'database.db'), autoload: true });
 
+// Cached token para reducir lecturas de disco
+let cachedToken: string | null = null;
+
 ipcMain.handle('create-room', async () => {
     await createRoomWindow();
 });
@@ -34,17 +37,21 @@ ipcMain.handle('save-token', async (event, token) => {
     const storagePath = getStoragePath();
     try {
         fs.writeFileSync(storagePath, JSON.stringify({ token }));
+        cachedToken = token;  // Cache the token
     } catch (error) {
         console.error('Error al guardar el token:', error);
     }
 });
 
 async function loadToken() {
+    if (cachedToken !== null) return cachedToken;  // Return cached token if available
+
     const storagePath = getStoragePath();
     try {
         if (fs.existsSync(storagePath)) {
             const data = fs.readFileSync(storagePath);
             const { token } = JSON.parse(data);
+            cachedToken = token;  // Cache the token after reading
             return token;
         }
     } catch (error) {
@@ -57,6 +64,7 @@ ipcMain.on('send-notification', (event, { title, body }) => {
     new Notification({ title, body }).show();
 });
 
+// Utilizar asincronía efectiva para evitar bloqueos
 ipcMain.handle('insert-document', async (event, doc) => {
     return new Promise((resolve, reject) => {
         db.insert(doc, (err, newDoc) => {
@@ -188,35 +196,14 @@ async function joinRoomWindow() {
     }
 }
 
-async function settingsWindow() {
-    const settingsWin = new BrowserWindow({
-        width: 500,
-        height: 400,
-        parent: mainWindow,
-        modal: true,
-        show: false,
-        webPreferences: {
-            preload: path.join(__dirname, '../preload/preload.js'),
-            contextIsolation: true,
-            enableRemoteModule: false,
-            nodeIntegration: false,
-            devTools: true,
-        },
-    });
-
-    settingsWin.loadURL('http://localhost:5173/settings');
-    settingsWin.webContents.on('did-finish-load', () => {
-        settingsWin.show();
-    });
-}
-
+// Main window creation streamlined with token handling
 async function createMainWindow() {
     const token = await loadToken();
     const isAuthenticated = token && token !== "undefined";
 
     const windowOptions = isAuthenticated
         ? { width: 1200, height: 900 }
-        : { width: 400, height: 480 };
+        : { width: 400, height :480 };
 
     mainWindow = new BrowserWindow({
         ...windowOptions,

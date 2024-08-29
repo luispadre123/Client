@@ -48,7 +48,7 @@ const mappedGames = roomsData?.roomsListAndUpdates?.map((room: any) => ({
 })) || [];
 
   const data = {
-    headers: ['Nombre', 'Host', 'Descripción', 'Ping', 'Jugadores', 'Estado', 'Privado'], // Encabezados de la tabla
+    headers: ['Nombre', 'Juego','Host', 'Descripción', 'Ping', 'Jugadores', 'Estado', 'Privado'], // Encabezados de la tabla
     games: mappedGames, 
 };
 
