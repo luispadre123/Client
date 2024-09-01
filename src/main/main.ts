@@ -3,6 +3,9 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import Datastore from 'nedb';
+import { dialog } from 'electron';
+
+import { execFile } from 'child_process';
 
 let mainWindow: BrowserWindow;
 let createRoomWin: BrowserWindow | null = null;
@@ -24,6 +27,32 @@ const db = new Datastore({ filename: path.join(app.getPath('userData'), 'databas
 
 // Cached token para reducir lecturas de disco
 let cachedToken: string | null = null;
+
+ipcMain.handle('open-app', async (event, appPath: string) => {
+    try {
+        execFile(appPath, (error) => {
+            if (error) {
+                console.error('Error al abrir la aplicación:', error);
+            }
+        });
+    } catch (error) {
+        console.error('Error en el manejo de la apertura de la aplicación:', error);
+    }
+});
+
+ipcMain.handle('select-app', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [{ name: 'Applications', extensions: ['exe', 'app'] }] // Filtro para archivos de aplicaciones
+    });
+
+    if (canceled || filePaths.length === 0) {
+        return null;
+    }
+
+    const selectedAppPath = filePaths[0];
+    return selectedAppPath;
+});
 
 ipcMain.handle('create-room', async () => {
     await createRoomWindow();

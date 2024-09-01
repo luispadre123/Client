@@ -2,6 +2,9 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 // Exponer funciones a través de contextBridge para ser usadas en React
 contextBridge.exposeInMainWorld('api', {
+    selectApp: () => ipcRenderer.invoke('select-app'),
+    openApp: (appPath: string) => ipcRenderer.invoke('open-app', appPath),
+
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     closeWindow: () => ipcRenderer.send('close-window'),
     maximizeWindow: () => ipcRenderer.send('maximize-window'),
